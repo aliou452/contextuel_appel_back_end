@@ -3,6 +3,7 @@ package com.stgson.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -12,8 +13,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import static com.stgson.security.ApplicationUserRole.*;
+
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
@@ -27,9 +31,12 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
 //                .antMatchers("/")
 //                .permitAll()
+//                .antMatchers("/api/v1/home").hasAnyRole(ADMIN.name(), VERIFICATEUR.name())
+//                .antMatchers(GET, "/api/v1/dash").hasAuthority(DEPOT_WRITE.getPermission())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -43,8 +50,22 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails abdallah = User.builder()
                 .username("abdallah")
                 .password(passwordEncoder.encode("password"))
-                .roles("distributeur")
+//                .roles(DISTRIBUTEUR.name()) //ROLE_DISTRIBUTEUR
+                .authorities(DISTRIBUTEUR.getSimpleGrantedAuthority())
                 .build();
-        return new InMemoryUserDetailsManager(abdallah);
+        UserDetails aliou = User.builder()
+                .username("aliou")
+                .password(passwordEncoder.encode("password"))
+//                .roles(VERIFICATEUR.name())
+                .authorities(ADMIN.getSimpleGrantedAuthority())
+                .build();
+        UserDetails zakaria = User.builder()
+                .username("zakaria")
+                .password(passwordEncoder.encode("password"))
+//                .roles(ADMIN.name())
+                .authorities(VERIFICATEUR.getSimpleGrantedAuthority())
+                .build();
+
+        return new InMemoryUserDetailsManager(abdallah, aliou, zakaria);
     }
 }
