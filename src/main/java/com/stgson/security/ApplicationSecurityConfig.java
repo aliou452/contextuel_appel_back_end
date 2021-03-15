@@ -1,6 +1,6 @@
 package com.stgson.security;
 
-import com.stgson.auth.ApplicationUserService;
+import com.stgson.auth.AppUserService;
 import com.stgson.jwt.JwtConfig;
 import com.stgson.jwt.JwtTokenVerifier;
 import com.stgson.jwt.JwtUsernamePasswordAuthenticationFilter;
@@ -23,15 +23,15 @@ import javax.crypto.SecretKey;
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
-    private final ApplicationUserService applicationUserService;
+    private final AppUserService appUserService;
     private final SecretKey secretKey;
     private final JwtConfig jwtConfig;
 
     @Autowired
     public ApplicationSecurityConfig(PasswordEncoder passwordEncoder,
-                                     ApplicationUserService applicationUserService, SecretKey secretKe, JwtConfig jwtConfig) {
+                                     AppUserService appUserService, SecretKey secretKe, JwtConfig jwtConfig) {
         this.passwordEncoder = passwordEncoder;
-        this.applicationUserService = applicationUserService;
+        this.appUserService = appUserService;
         this.secretKey = secretKe;
         this.jwtConfig = jwtConfig;
     }
@@ -49,10 +49,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtUsernamePasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey))
                 .addFilterAfter(new JwtTokenVerifier(secretKey, jwtConfig), JwtUsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
-                .antMatchers("/api/v1/home").permitAll()
-//                .antMatchers(GET, "/api/v1/dash").hasAuthority(DEPOT_WRITE.getPermission())
+                    .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
+                    .antMatchers("/api/v1/registration").permitAll()
                 .anyRequest()
                 .authenticated();
     }
@@ -66,7 +64,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(applicationUserService);
+        provider.setUserDetailsService(appUserService);
         return provider;
     }
 }

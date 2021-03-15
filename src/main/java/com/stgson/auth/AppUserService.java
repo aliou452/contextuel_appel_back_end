@@ -1,7 +1,5 @@
 package com.stgson.auth;
 
-import com.stgson.model.User;
-import com.stgson.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,25 +8,38 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ApplicationUserService implements UserDetailsService {
+public class AppUserService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ApplicationUserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+    public AppUserService(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
+        this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserDetails loadUserByUsername(String number) throws UsernameNotFoundException {
-        User user = userRepository
+        return appUserRepository
                 .findByNumber(number)
                 .orElseThrow(() ->
                         new UsernameNotFoundException(String.format("Username %s note found", number)));
-        user.setCode(passwordEncoder.encode(user.getCode()));
+    }
 
-        return new ApplicationUser(user);
+    public boolean signUpUser(AppUser appUser) {
+        boolean userExists = appUserRepository
+                .findByNumber(appUser.getNumber())
+                .isPresent();
+        if (userExists) {
+            throw new IllegalStateException("Phone number has already Orange Money Account");
+        }
+
+        String encodedPassword = passwordEncoder.encode(appUser.getCode());
+        appUser.setCode(encodedPassword);
+
+        appUserRepository.save(appUser);
+
+        return true;
     }
 }

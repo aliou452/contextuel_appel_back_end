@@ -1,33 +1,38 @@
 package com.stgson;
 
-import com.stgson.repository.UserRepository;
+import com.stgson.auth.AppUser;
+import com.stgson.auth.AppUserRepository;
+import com.stgson.auth.AppUserRole;
+import com.stgson.auth.AppUserService;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
-@RestController
-@RequestMapping("api/v1")
-@EnableJpaRepositories(basePackageClasses = UserRepository.class)
+@EnableJpaRepositories(basePackageClasses = AppUserRepository.class)
 public class ContextualAppApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ContextualAppApplication.class, args);
 	}
 
-	@GetMapping(path = "home")
-//	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_VERIFICATEUR')")
-	public String home(){
-		return "Hello everybody";
-	}
-
-	@GetMapping(path = "dash")
-//	@PreAuthorize("hasAuthority('depot:write')")
-	public String dashboard(){
-		return "Hello everybody";
+	@Bean
+	CommandLineRunner commandLineRunner(
+			AppUserService appUserService) {
+		return args -> {
+			appUserService.signUpUser(
+					new AppUser(
+							"Abdallah",
+							"Diop",
+							"771438896",
+							"2525",
+							AppUserRole.ADMIN,
+							false,
+							true
+					)
+			);
+		};
 	}
 }
