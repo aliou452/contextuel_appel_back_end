@@ -18,21 +18,19 @@ public class ContextualAppApplication {
 		SpringApplication.run(ContextualAppApplication.class, args);
 	}
 
-//	@Bean
-//	CommandLineRunner commandLineRunner(
-//			AppUserService appUserService) {
-//		return args -> {
-//			appUserService.signUpUser(
-//					new AppUser(
-//							"Abdallah",
-//							"Diop",
-//							"771438896",
-//							"2525",
-//							AppUserRole.ADMIN,
-//							false,
-//							true
-//					)
-//			);
-//		};
-//	}
+	@Bean
+	CommandLineRunner commandLineRunner(
+			AppUserService appUserService) {
+		return args -> appUserService.signUpUser(
+				new AppUser(
+						"Aliou",
+						"SY",
+						"781700136",
+						"2525",
+						AppUserRole.ADMIN,
+						false,
+						true
+				)
+		);
+	}
 }
