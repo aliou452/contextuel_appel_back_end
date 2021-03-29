@@ -29,6 +29,13 @@ public class AppUserService implements UserDetailsService {
                         new UsernameNotFoundException(String.format("Username %s note found", number)));
     }
 
+    public AppUser userExist(Long id){
+        return appUserRepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException(String.format("Username %s note found", id)));
+    }
+
     public boolean signUpUser(AppUser appUser) {
         boolean userExists = appUserRepository
                 .findByNumber(appUser.getNumber())

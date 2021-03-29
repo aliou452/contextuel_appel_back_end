@@ -52,6 +52,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                     .antMatchers("/api/v1/registration").permitAll()
+                    .antMatchers("/login").permitAll()
                 .anyRequest()
                 .authenticated();
     }

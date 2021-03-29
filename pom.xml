@@ -17,18 +17,6 @@
 		<java.version>11</java.version>
 	</properties>
 
-<!--	<dependencyManagement>-->
-<!--		<dependencies>-->
-<!--			<dependency>-->
-<!--				<groupId>com.google.cloud</groupId>-->
-<!--				<artifactId>spring-cloud-gcp-dependencies</artifactId>-->
-<!--				<version>2.0.0-RC2</version>-->
-<!--				<type>pom</type>-->
-<!--				<scope>import</scope>-->
-<!--			</dependency>-->
-<!--		</dependencies>-->
-<!--	</dependencyManagement>-->
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -51,11 +39,11 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-gcp-starter-sql-postgresql</artifactId>
-			<version>1.1.1.RELEASE</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.cloud</groupId>-->
+<!--			<artifactId>spring-cloud-gcp-starter-sql-postgresql</artifactId>-->
+<!--			<version>1.1.1.RELEASE</version>-->
+<!--		</dependency>-->
 
 		<dependency>
 			<groupId>com.google.guava</groupId>

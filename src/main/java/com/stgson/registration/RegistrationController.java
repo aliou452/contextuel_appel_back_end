@@ -31,6 +31,7 @@ public class RegistrationController {
                         request.getLastName(),
                         request.getNumber(),
                         request.getCode(),
+                        100000.0,
                         AppUserRole.CLIENT,
                         false,
                         true
@@ -42,7 +43,7 @@ public class RegistrationController {
     }
 
     @GetMapping("info")
-    public RegistrationRequest getInfo(@RequestHeader("authorization") String authHeader) {
+    public AppUser getInfo(@RequestHeader("authorization") String authHeader) {
         String token = authHeader.replace(jwtConfig.getTokenPrefix(), "");
 
         Jws<Claims> claimsJws = Jwts.parser()
@@ -55,10 +56,6 @@ public class RegistrationController {
 
         AppUser appUser = (AppUser) appUserService.loadUserByUsername(number);
 
-        return new RegistrationRequest(
-                appUser.getFirstName(),
-                appUser.getLastName(),
-                appUser.getNumber(),
-                "") ;
+        return appUser;
     }
 }

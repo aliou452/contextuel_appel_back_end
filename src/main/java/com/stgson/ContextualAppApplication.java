@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackageClasses = AppUserRepository.class)
+@EnableJpaRepositories()
 public class ContextualAppApplication {
 
 	public static void main(String[] args) {
@@ -28,6 +28,7 @@ public class ContextualAppApplication {
 //							"SY",
 //							"781700136",
 //							"2525",
+//							0.0,
 //							AppUserRole.ADMIN,
 //							false,
 //							true
