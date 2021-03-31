@@ -2,6 +2,8 @@ package com.stgson.transaction;
 
 import com.stgson.auth.AppUser;
 import com.stgson.auth.AppUserService;
+import com.stgson.jwt.JwtConfig;
+import com.stgson.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,18 +19,29 @@ public class TransactionController {
 
     @Autowired
     public TransactionController(TransactionService transactionService,
-                                 AppUserService appUserService) {
+                                 AppUserService appUserService,
+                                 JwtConfig jwtConfig,
+                                 JwtUtils jwtUtils) {
         this.transactionService = transactionService;
         this.appUserService = appUserService;
     }
 
     @PostMapping("{id}/transfers")
-    public void doTransfer(@PathVariable Long id, @RequestBody TransactionRequest request){
-        AppUser sender = appUserService.userExist(id);
+    public void doTransfer(@PathVariable Long id,
+                           @RequestBody TransactionRequest request,
+                           @RequestHeader("authorization") String authHeader){
+
         AppUser receiver = (AppUser) appUserService.loadUserByUsername(request.getReceiver());
+        AppUser sender = transactionService.amIUser(authHeader, id, request);
+
         if(sender.getPocket() < request.getAmount()){
             throw new IllegalStateException("Solde insuffisant");
         }
+
+        if(sender.getNumber().equals(receiver.getNumber())){
+            throw new IllegalStateException("Vous ne pouvez pas vous envoyer de l'argent");
+        }
+
         sender.setPocket(sender.getPocket() - request.getAmount());
         receiver.setPocket(receiver.getPocket() + request.getAmount());
         Transaction transaction = new Transaction();

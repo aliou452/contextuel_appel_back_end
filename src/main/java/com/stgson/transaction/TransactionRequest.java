@@ -13,4 +13,5 @@ import lombok.Setter;
 public class TransactionRequest {
     private String receiver;
     private Double amount;
+    private String code;
 }

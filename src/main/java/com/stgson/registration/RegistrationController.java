@@ -4,6 +4,7 @@ import com.stgson.auth.AppUser;
 import com.stgson.auth.AppUserRole;
 import com.stgson.auth.AppUserService;
 import com.stgson.jwt.JwtConfig;
+import com.stgson.jwt.JwtUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -22,6 +23,7 @@ public class RegistrationController {
     private final AppUserService appUserService;
     private final SecretKey secretKey;
     private final JwtConfig jwtConfig;
+    private final JwtUtils jwtUtils;
 
     @PostMapping("registration")
     public Boolean register(@RequestBody RegistrationRequest request) {
@@ -39,23 +41,21 @@ public class RegistrationController {
         );
 
         return true;
-
     }
 
     @GetMapping("info")
     public AppUser getInfo(@RequestHeader("authorization") String authHeader) {
         String token = authHeader.replace(jwtConfig.getTokenPrefix(), "");
+//
+//        Jws<Claims> claimsJws = Jwts.parser()
+//                .setSigningKey(secretKey)
+//                .parseClaimsJws(token);
+//
+//        Claims body = claimsJws.getBody();
 
-        Jws<Claims> claimsJws = Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token);
+//        String number = body.getSubject();
+        String number = jwtUtils.extractUsername(token);
 
-        Claims body = claimsJws.getBody();
-
-        String number = body.getSubject();
-
-        AppUser appUser = (AppUser) appUserService.loadUserByUsername(number);
-
-        return appUser;
+        return (AppUser) appUserService.loadUserByUsername(number);
     }
 }
