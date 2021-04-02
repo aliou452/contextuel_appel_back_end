@@ -46,16 +46,7 @@ public class RegistrationController {
     @GetMapping("info")
     public AppUser getInfo(@RequestHeader("authorization") String authHeader) {
         String token = authHeader.replace(jwtConfig.getTokenPrefix(), "");
-//
-//        Jws<Claims> claimsJws = Jwts.parser()
-//                .setSigningKey(secretKey)
-//                .parseClaimsJws(token);
-//
-//        Claims body = claimsJws.getBody();
-
-//        String number = body.getSubject();
         String number = jwtUtils.extractUsername(token);
-
         return (AppUser) appUserService.loadUserByUsername(number);
     }
 }
