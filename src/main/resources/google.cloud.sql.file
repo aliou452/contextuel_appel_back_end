@@ -1,4 +1,9 @@
-spring.datasource.url=jdbc:postgresql://localhost:5432/stgson
+spring.cloud.gcp.project-id=vocal-etching-307913
+spring.cloud.gcp.sql.database-name=stgson
+spring.cloud.gcp.sql.instance-connection-name=vocal-etching-307913:us-central1:contextualapp
+spring.datasource.initialization-mode=always
+spring.cloud.gcp.credentials.location=file:src/main/resources/keycontextualapp.json
+
 spring.datasource.username=postgres
 spring.datasource.password=Poulm001#
 spring.jpa.hibernate.ddl-auto=update
@@ -6,7 +11,8 @@ spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.properties.hibernate.format_sql=true
 
-
 application.jwt.secretKey=securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure
 application.jwt.tokenPrefix=Bearer
-application.jwt.tokenExpirationAfterMonths=4
+application.jwt.tokenExpirationAfterMonths=5
+
+spring.profiles.active=postgresql

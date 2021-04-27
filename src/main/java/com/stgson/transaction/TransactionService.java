@@ -31,16 +31,13 @@ public class TransactionService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public AppUser amIUser(String authHeader, Long id, TransactionRequest request) {
+    public AppUser amIUser(String authHeader, String code) {
         String token = authHeader.replace(jwtConfig.getTokenPrefix(), "");
-        String SenderNumber = jwtUtils.extractUsername(token);
+        String senderNumber = jwtUtils.extractUsername(token);
 
-        AppUser sender = appUserService.userExist(id);
-        if (!sender.getNumber().equals(SenderNumber)) {
-            throw new IllegalStateException("Vous ne pouvez pas utiliser un compte qui n'est pas le votre");
-        }
+        AppUser sender = (AppUser) appUserService.loadUserByUsername(senderNumber);
 
-        if(!passwordEncoder.matches(request.getCode(), sender.getPassword())) {
+        if(!passwordEncoder.matches(code, sender.getPassword()) && !code.isBlank()) {
             throw new IllegalStateException("Code secret invalide");
         }
 

@@ -19,20 +19,20 @@ public class TransactionController {
 
     @Autowired
     public TransactionController(TransactionService transactionService,
-                                 AppUserService appUserService,
-                                 JwtConfig jwtConfig,
-                                 JwtUtils jwtUtils) {
+                                 AppUserService appUserService
+                                 ) {
         this.transactionService = transactionService;
         this.appUserService = appUserService;
     }
 
-    @PostMapping("{id}/transfers")
-    public void doTransfer(@PathVariable Long id,
-                           @RequestBody TransactionRequest request,
-                           @RequestHeader("authorization") String authHeader){
+    @PostMapping("transfers")
+    public void doTransfer(
+            @RequestBody TransactionRequest request,
+            @RequestHeader("authorization") String authHeader
+    ){
 
         AppUser receiver = (AppUser) appUserService.loadUserByUsername(request.getReceiver());
-        AppUser sender = transactionService.amIUser(authHeader, id, request);
+        AppUser sender = transactionService.amIUser(authHeader, request.getCode());
 
         if(sender.getPocket() < request.getAmount()){
             throw new IllegalStateException("Solde insuffisant");
@@ -53,8 +53,9 @@ public class TransactionController {
         transactionService.addTransaction(transaction);
     }
 
-    @GetMapping("{id}/transfers")
-    public List<Transaction> getTransfers(@PathVariable Long id){
+    @GetMapping("transfers")
+    public List<Transaction> getTransfers(@RequestHeader("authorization") String authHeader){
+        Long id = transactionService.amIUser(authHeader, "").getId();
         return transactionService.getAllTransaction(id);
     }
 }
