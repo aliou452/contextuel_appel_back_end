@@ -52,4 +52,9 @@ public class AppUserService implements UserDetailsService {
         return true;
     }
 
+    public void updateUser(AppUser appUser, Double amount){
+        appUser.setPocket(appUser.getPocket() + amount);
+        appUserRepository.save(appUser);
+    }
+
 }
