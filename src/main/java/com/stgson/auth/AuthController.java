@@ -12,5 +12,4 @@ public class AuthController {
     @GetMapping("/authenticate")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void authenticate() {}
-
 }

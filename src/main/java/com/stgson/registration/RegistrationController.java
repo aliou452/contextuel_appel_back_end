@@ -21,7 +21,6 @@ import javax.crypto.SecretKey;
 public class RegistrationController {
 
     private final AppUserService appUserService;
-    private final SecretKey secretKey;
     private final JwtConfig jwtConfig;
     private final JwtUtils jwtUtils;
 
@@ -33,7 +32,8 @@ public class RegistrationController {
                         request.getLastName(),
                         request.getNumber(),
                         request.getCode(),
-                        100000.0,
+                        0.0,
+                        0.0,
                         AppUserRole.CLIENT,
                         false,
                         true

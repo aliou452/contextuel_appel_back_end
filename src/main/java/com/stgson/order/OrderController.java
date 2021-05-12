@@ -27,9 +27,9 @@ public class OrderController {
     )
     {
         AppUser author = orderService.amIUser(authHeader, request.getCode());
-        Order order = new Order(author, LocalDateTime.now(), request.getAmount());
+        Order order = new Order(author, LocalDateTime.now(), request.getAmount(), TypeOrder.fromText(request.getTypeOrder()));
         orderService.addOrder(order);
-        appUserService.updateUser(author, order.getAmount());
+        appUserService.updateUser(author, order.getAmount(), order.getTypeOrder());
     }
 
     @GetMapping("orders")

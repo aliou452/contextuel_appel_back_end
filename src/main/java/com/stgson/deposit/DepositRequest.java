@@ -1,18 +1,17 @@
-package com.stgson.order;
+package com.stgson.deposit;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.lang.reflect.Type;
-
 @AllArgsConstructor
 @Getter
 @Setter
 @NoArgsConstructor
-public class OrderRequest {
+public class DepositRequest {
     private Double amount;
     private String code;
-    private String typeOrder;
+    private String number;
+    private String type;
 }

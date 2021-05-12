@@ -38,9 +38,13 @@ public class Order {
     @Column(nullable = false)
     private double amount;
 
-    public Order(AppUser author, LocalDateTime doneAt, double amount) {
+    @Column(nullable = false)
+    private TypeOrder typeOrder;
+
+    public Order(AppUser author, LocalDateTime doneAt, double amount, TypeOrder typeOrder) {
         this.author = author;
         this.doneAt = doneAt;
         this.amount = amount;
+        this.typeOrder = typeOrder;
     }
 }

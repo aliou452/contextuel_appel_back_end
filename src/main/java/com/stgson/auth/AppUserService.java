@@ -1,13 +1,12 @@
 package com.stgson.auth;
 
+import com.stgson.order.TypeOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AppUserService implements UserDetailsService {
@@ -52,9 +51,16 @@ public class AppUserService implements UserDetailsService {
         return true;
     }
 
-    public void updateUser(AppUser appUser, Double amount){
-        appUser.setPocket(appUser.getPocket() + amount);
-        appUserRepository.save(appUser);
+    public void updateUser(AppUser appUser, Double amount, TypeOrder typeOrder){
+        if(typeOrder.name() == TypeOrder.MONEY.name()){
+            appUser.setPocket(appUser.getPocket() + amount);
+            appUserRepository.save(appUser);
+        } else{
+            appUser.setSeddo(appUser.getSeddo() + amount);
+            appUserRepository.save(appUser);
+        }
+
     }
+
 
 }

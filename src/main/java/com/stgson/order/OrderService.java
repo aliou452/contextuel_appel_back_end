@@ -2,6 +2,7 @@ package com.stgson.order;
 
 import com.stgson.auth.AppUser;
 import com.stgson.transaction.TransactionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -14,6 +15,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final TransactionService transactionService;
 
+    @Autowired
     public OrderService(OrderRepository orderRepository, TransactionService transactionService) {
         this.orderRepository = orderRepository;
         this.transactionService = transactionService;

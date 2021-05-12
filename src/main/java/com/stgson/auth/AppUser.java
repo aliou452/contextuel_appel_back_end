@@ -1,11 +1,9 @@
 package com.stgson.auth;
 
-import com.stgson.transaction.Transaction;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -72,22 +69,24 @@ public class AppUser implements UserDetails {
     )
     private Double pocket;
 
+    @Column(
+            name = "seddo",
+            nullable = false
+    )
+    private Double seddo;
+
     @Enumerated(EnumType.STRING)
     private AppUserRole appUserRole;
 
-//    @OneToMany(mappedBy = "sender")
-//    Set<Transaction> transfers;
-//
-//    @OneToMany(mappedBy = "receiver")
-//    Set<Transaction> receipts;
-
     private boolean locked = false;
+
     private boolean enabled = false;
     public AppUser(String firstName,
                    String lastName,
                    String number,
                    String code,
                    Double pocket,
+                   Double seddo,
                    AppUserRole appUserRole,
                    boolean locked,
                    boolean enabled) {
@@ -99,8 +98,8 @@ public class AppUser implements UserDetails {
         this.locked = locked;
         this.enabled = enabled;
         this.pocket = pocket;
+        this.seddo = seddo;
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -124,6 +123,14 @@ public class AppUser implements UserDetails {
 
     public void setPocket(Double pocket) {
         this.pocket = pocket;
+    }
+
+    public Double getSeddo() {
+        return seddo;
+    }
+
+    public void setSeddo(Double seddo) {
+        this.seddo = seddo;
     }
 
     @Override
