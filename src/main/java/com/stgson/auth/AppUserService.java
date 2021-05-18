@@ -1,6 +1,6 @@
 package com.stgson.auth;
 
-import com.stgson.order.TypeOrder;
+import com.stgson.transaction.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -35,7 +35,7 @@ public class AppUserService implements UserDetailsService {
                         new UsernameNotFoundException(String.format("Username %s note found", id)));
     }
 
-    public boolean signUpUser(AppUser appUser) {
+    public void signUpUser(AppUser appUser) {
         boolean userExists = appUserRepository
                 .findByNumber(appUser.getNumber())
                 .isPresent();
@@ -48,17 +48,17 @@ public class AppUserService implements UserDetailsService {
 
         appUserRepository.save(appUser);
 
-        return true;
     }
 
-    public void updateUser(AppUser appUser, Double amount, TypeOrder typeOrder){
-        if(typeOrder.name() == TypeOrder.MONEY.name()){
+    public void updateUser(AppUser appUser, Double amount, String transType){
+        if(transType.equals(TransactionType.MONEY.name())
+                || transType.equals(TransactionType.MONEY_WITHDRAW.name())
+        ){
             appUser.setPocket(appUser.getPocket() + amount);
-            appUserRepository.save(appUser);
         } else{
             appUser.setSeddo(appUser.getSeddo() + amount);
-            appUserRepository.save(appUser);
         }
+        appUserRepository.save(appUser);
 
     }
 

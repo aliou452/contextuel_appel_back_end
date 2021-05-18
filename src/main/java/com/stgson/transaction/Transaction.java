@@ -9,9 +9,12 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@Entity(name = "transactions")
+@Table(name = "transactions")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="transactions_type",
+        discriminatorType = DiscriminatorType.INTEGER)
 @NoArgsConstructor
-@Entity(name = "transaction")
-@Table(name = "transaction")
 @Getter
 @Setter
 public class Transaction implements Serializable {
@@ -31,12 +34,7 @@ public class Transaction implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
-    private AppUser sender;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receiver_id")
-    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
-    private AppUser receiver;
+    private AppUser dist;
 
     private LocalDateTime doneAt;
 
@@ -45,17 +43,17 @@ public class Transaction implements Serializable {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private TypeTransaction typeTransaction;
+    private TransactionType transactionType;
 
-    public Transaction(AppUser sender,
-                       AppUser receiver,
+    public Transaction(AppUser dist,
                        LocalDateTime doneAt,
                        double amount,
-                       TypeTransaction typeTransaction) {
-        this.sender = sender;
-        this.receiver = receiver;
+                       TransactionType transactionType) {
+        this.dist = dist;
         this.doneAt = doneAt;
         this.amount = amount;
-        this.typeTransaction = typeTransaction;
+        this.transactionType = transactionType;
     }
 }
+
+

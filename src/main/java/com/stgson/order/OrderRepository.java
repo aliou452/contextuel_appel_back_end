@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    List<Order> findByAuthorId(Long id);
+    List<Order> findByDistId(Long id);
 }

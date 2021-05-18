@@ -1,8 +1,8 @@
 package com.stgson.deposit;
 
 import com.stgson.auth.AppUser;
-import com.stgson.order.TypeOrder;
 import com.stgson.transaction.TransactionService;
+import com.stgson.transaction.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -37,7 +37,11 @@ public class DepositService {
     }
 
     public Client getClient(String number) {
-        return clientRepository.findByNumber(number);
+        Client client = clientRepository.findByNumber(number);
+        if (client == null) {
+            throw new IllegalArgumentException("This client does not exist");
+        }
+        return client;
     }
 
     public void CreateClient(Client client) {
@@ -48,8 +52,8 @@ public class DepositService {
         return clientRepository.findAll();
     }
 
-    public void updateClient(Client client, Double amount, TypeOrder typeOrder) {
-        if(typeOrder.equals(TypeOrder.MONEY)) {
+    public void updateClient(Client client, Double amount, String transType) {
+        if(transType.equals(TransactionType.MONEY.name())) {
             client.setPocket(client.getPocket() + amount);
         } else{
             client.setSeddo(client.getSeddo() + amount);

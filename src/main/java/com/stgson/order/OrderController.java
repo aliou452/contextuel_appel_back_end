@@ -3,6 +3,7 @@ package com.stgson.order;
 import com.stgson.auth.AppUser;
 import com.stgson.auth.AppUserRepository;
 import com.stgson.auth.AppUserService;
+import com.stgson.transaction.TransactionType;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -27,9 +28,9 @@ public class OrderController {
     )
     {
         AppUser author = orderService.amIUser(authHeader, request.getCode());
-        Order order = new Order(author, LocalDateTime.now(), request.getAmount(), TypeOrder.fromText(request.getTypeOrder()));
+        Order order = new Order(author, LocalDateTime.now(), request.getAmount(), TransactionType.valueOf(request.getTypeOrder()));
         orderService.addOrder(order);
-        appUserService.updateUser(author, order.getAmount(), order.getTypeOrder());
+        appUserService.updateUser(author, order.getAmount(), order.getTransactionType().name());
     }
 
     @GetMapping("orders")

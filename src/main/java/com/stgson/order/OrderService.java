@@ -22,7 +22,7 @@ public class OrderService {
     }
 
     public List<Order> getAllOrders(@RequestHeader Long id) {
-        return new ArrayList<>(orderRepository.findByAuthorId(id));
+        return new ArrayList<>(orderRepository.findByDistId(id));
     }
 
     public void addOrder(Order order) {

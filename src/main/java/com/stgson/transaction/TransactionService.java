@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
@@ -33,33 +32,20 @@ public class TransactionService {
 
     public AppUser amIUser(String authHeader, String code) {
         String token = authHeader.replace(jwtConfig.getTokenPrefix(), "");
-        String senderNumber = jwtUtils.extractUsername(token);
+        String distNumber = jwtUtils.extractUsername(token);
 
-        AppUser sender = (AppUser) appUserService.loadUserByUsername(senderNumber);
+        AppUser dist = (AppUser) appUserService.loadUserByUsername(distNumber);
 
-        if(!passwordEncoder.matches(code, sender.getPassword()) && !code.isBlank()) {
+        if(!passwordEncoder.matches(code, dist.getPassword()) && !code.isBlank()) {
             throw new IllegalStateException("Code secret invalide");
         }
-
-        return sender;
+        return dist;
     }
-    public List<Transaction> getAllTransaction(Long id){
-        List<Transaction> transactions = new ArrayList<>();
-        transactions.addAll(transactionRepository.findBySenderId(id)
-                .stream()
-                .peek(
-                        receipt -> receipt.setTypeTransaction(TypeTransaction.RETRAIT)
-                ).collect(Collectors.toList()));
-        transactions.addAll(transactionRepository.findByReceiverId(id)
-                .stream()
-                .peek(
-                        receipt -> receipt.setTypeTransaction(TypeTransaction.DEPOT)
-                ).collect(Collectors.toList()));
+
+    public List<Transaction> getAllTransactions(Long id){
+        List<Transaction> transactions = new ArrayList<>(transactionRepository.findByDistId(id));
         transactions.sort(Comparator.comparing(Transaction::getDoneAt).reversed());
         return transactions;
     }
 
-    public void addTransaction(Transaction transaction){
-        transactionRepository.save(transaction);
-    }
 }
