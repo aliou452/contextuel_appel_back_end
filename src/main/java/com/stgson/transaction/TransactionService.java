@@ -33,7 +33,6 @@ public class TransactionService {
     public AppUser amIUser(String authHeader, String code) {
         String token = authHeader.replace(jwtConfig.getTokenPrefix(), "");
         String distNumber = jwtUtils.extractUsername(token);
-
         AppUser dist = (AppUser) appUserService.loadUserByUsername(distNumber);
 
         if(!passwordEncoder.matches(code, dist.getPassword()) && !code.isBlank()) {

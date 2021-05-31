@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class DepositService {
@@ -42,6 +45,14 @@ public class DepositService {
             throw new IllegalArgumentException("This client does not exist");
         }
         return client;
+    }
+
+    public Set<Client> getClDist(Long id) {
+        List<Deposit> deposits = new ArrayList<>(depositRepository.getTransBetweenDates(id,
+                LocalDateTime.now().minusMonths(1),
+                LocalDateTime.now()));
+
+        return deposits.stream().map(Deposit::getClient).collect(Collectors.toSet());
     }
 
     public void CreateClient(Client client) {

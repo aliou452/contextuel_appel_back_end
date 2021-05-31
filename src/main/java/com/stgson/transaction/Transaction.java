@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity(name = "transactions")
 @Table(name = "transactions")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="transactions_type",
+@DiscriminatorColumn(name="trans_type",
         discriminatorType = DiscriminatorType.INTEGER)
 @NoArgsConstructor
 @Getter

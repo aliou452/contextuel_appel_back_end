@@ -18,9 +18,9 @@ import java.time.LocalDateTime;
 @Setter
 public class Deposit extends Transaction {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id")
-    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+//    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private Client client;
 
     public Deposit(AppUser dist, Client client, LocalDateTime doneAt, double amount, TransactionType transactionType) {

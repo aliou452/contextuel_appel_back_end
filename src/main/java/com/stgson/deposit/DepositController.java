@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/")
@@ -76,6 +78,12 @@ public class DepositController {
                 0.0,
                 0.0);
         depositService.CreateClient(client);
+    }
+
+    @GetMapping("cldist")
+    public List<Client> getClDist(@RequestHeader("authorization") String authHeader){
+        Long id = depositService.amIUser(authHeader, "").getId();
+        return new ArrayList<>(depositService.getClDist(id));
     }
 
     @GetMapping("clients")
