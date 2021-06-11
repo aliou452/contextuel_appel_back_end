@@ -1,10 +1,18 @@
 package com.stgson.facture;
 
+import com.stgson.auth.AppUser;
+import com.stgson.auth.AppUserService;
+import com.stgson.transaction.Transaction;
+import com.stgson.transaction.TransactionService;
+import com.stgson.transaction.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -14,9 +22,15 @@ public class FactureService {
     private FactureRepository factureRepository;
     @Autowired
     private OneFactureRepository oneFactureRepository;
+    @Autowired
+    private TransactionService transactionService;
+    @Autowired
+    private AppUserService appUserService;
 
     Facture getFacture(Long contractNum) {
-        return this.factureRepository.findByContract(contractNum);
+        Facture facture = this.factureRepository.findByContract(contractNum);
+        facture.setList(facture.oneFactNotPaid());
+        return facture;
     }
 
     List<Facture> getFactures() {
@@ -58,7 +72,32 @@ public class FactureService {
 
     OneFacture getOneFacture(Long contractNum, Long fact_id) {
         Facture facture = this.factureRepository.findByContract(contractNum);
-        return facture.getFacture(fact_id);
+        return facture.getOneFacture(fact_id);
+    }
+
+    public AppUser amIUser(String authHeader, String code){
+        return transactionService.amIUser(authHeader, code);
+    }
+
+    void payment(Long fact_id, AppUser dist) {
+        OneFacture oneFacture = this.oneFactureRepository.findById(fact_id)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("Facture not found")
+                );
+        Double pocket = dist.getPocket();
+        if (pocket >= oneFacture.getAmount()) {
+
+            dist.setPocket(pocket - oneFacture.getAmount());
+            oneFacture.setPaid(true);
+            appUserService.saveUser(dist);
+            oneFactureRepository.save(oneFacture);
+            transactionService.addTransaction(
+                    new Transaction(dist, LocalDateTime.now(), oneFacture.getAmount(), TransactionType.FACTURE)
+            );
+        } else {
+            throw new IllegalStateException("Pocket is not enough");
+        }
+
     }
 
 }

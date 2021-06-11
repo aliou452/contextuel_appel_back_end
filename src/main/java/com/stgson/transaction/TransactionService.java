@@ -47,4 +47,8 @@ public class TransactionService {
         return transactions;
     }
 
+    public void addTransaction(Transaction transaction) {
+        transactionRepository.save(transaction);
+    }
+
 }

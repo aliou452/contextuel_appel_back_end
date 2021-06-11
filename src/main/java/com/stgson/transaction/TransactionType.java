@@ -5,4 +5,5 @@ public enum TransactionType {
     SEDDO,
     MONEY,
     MONEY_WITHDRAW,
+    FACTURE
 }

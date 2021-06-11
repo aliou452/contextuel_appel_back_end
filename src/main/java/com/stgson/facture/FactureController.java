@@ -1,5 +1,6 @@
 package com.stgson.facture;
 
+import com.stgson.auth.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,5 +46,13 @@ public class FactureController {
     @GetMapping("factures/{contract}/onefactures/{fact_id}")
     public OneFacture getOneFacture(@PathVariable Long contract, @PathVariable Long fact_id) {
         return this.factureService.getOneFacture(contract, fact_id);
+    }
+
+    @PostMapping("onefactures/{fact_id}")
+    public void payment(@PathVariable Long fact_id,
+                        @RequestHeader("Authorization") String authHeader,
+                        @RequestBody FactRequest request) {
+        AppUser dist = this.factureService.amIUser(authHeader, request.getCode());
+        this.factureService.payment(fact_id, dist);
     }
 }

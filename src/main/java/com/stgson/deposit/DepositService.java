@@ -27,7 +27,7 @@ public class DepositService {
         this.transactionService = transactionService;
     }
 
-    public List<Deposit> getAllDeposits(@RequestHeader Long id) {
+    public List<Deposit> getAllDeposits(Long id) {
         return new ArrayList<>(depositRepository.findByDistId(id));
     }
 
@@ -59,7 +59,7 @@ public class DepositService {
         clientRepository.save(client);
     }
 
-    public List<Client> getClients(){
+    public List<Client> getClients() {
         return clientRepository.findAll();
     }
 

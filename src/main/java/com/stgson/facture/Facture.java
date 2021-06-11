@@ -39,7 +39,7 @@ public class Facture implements Serializable {
     )
     private Long contract;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private FactureType type;
 
@@ -61,8 +61,12 @@ public class Facture implements Serializable {
         this.list.add(oneFacture);
     }
 
-    public OneFacture getFacture(Long fact_id) {
+    public OneFacture getOneFacture(Long fact_id) {
         return list.stream().filter(oneFacture -> !oneFacture.getPaid() && oneFacture.getId().equals(fact_id))
                 .collect(Collectors.toList()).get(0);
+    }
+
+    public List<OneFacture> oneFactNotPaid() {
+        return list.stream().filter(oneFacture -> !oneFacture.getPaid()).collect(Collectors.toList());
     }
 }
