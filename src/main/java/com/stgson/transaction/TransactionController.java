@@ -1,7 +1,5 @@
 package com.stgson.transaction;
 
-import com.stgson.auth.AppUser;
-import com.stgson.auth.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
