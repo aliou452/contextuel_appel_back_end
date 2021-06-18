@@ -29,7 +29,7 @@ public class FactureController {
     }
 
     @GetMapping("factures/{contract}")
-    public Facture getFacture(@PathVariable Long contract) {
+    public Boolean getFacture(@PathVariable Long contract) {
         return factureService.getFacture(contract);
     }
 

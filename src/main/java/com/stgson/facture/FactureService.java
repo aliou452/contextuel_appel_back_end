@@ -27,10 +27,9 @@ public class FactureService {
     @Autowired
     private AppUserService appUserService;
 
-    Facture getFacture(Long contractNum) {
-        Facture facture = this.factureRepository.findByContract(contractNum);
-        facture.setList(facture.oneFactNotPaid());
-        return facture;
+    Boolean getFacture(Long contractNum) {
+        boolean present = this.factureRepository.findByContract(contractNum).isPresent();
+        return present;
     }
 
     List<Facture> getFactures() {
@@ -58,20 +57,26 @@ public class FactureService {
                 oneFactureRequest.getAmount(),
                 false);
         this.oneFactureRepository.save(oneFacture);
-        Facture facture = this.factureRepository.findByContract(contractNum);
+        Facture facture = this.factureRepository.findByContract(contractNum)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("Contract doesn't exist")
+                );
         facture.addTo(oneFacture);
         this.factureRepository.save(facture);
     }
 
     List<OneFacture> getOneFactures(Long contractNum) {
-        List<OneFacture> listOneFactures = this.factureRepository.findByContract(contractNum).getList();
+        List<OneFacture> listOneFactures = this.factureRepository.findByContract(contractNum)
+                .orElseThrow(() -> new UsernameNotFoundException("Contract does not exist"))
+                .getList();
         return listOneFactures.stream()
                 .filter(oneFacture -> !oneFacture.getPaid())
                 .collect(Collectors.toList());
     }
 
     OneFacture getOneFacture(Long contractNum, Long fact_id) {
-        Facture facture = this.factureRepository.findByContract(contractNum);
+        Facture facture = this.factureRepository.findByContract(contractNum)
+                .orElseThrow(() -> new UsernameNotFoundException("Contract does not exist"));
         return facture.getOneFacture(fact_id);
     }
 
